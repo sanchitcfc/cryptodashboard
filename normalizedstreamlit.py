@@ -24,9 +24,17 @@ symbols = ['SANDUSDT', 'BTCUSDT', 'ETHUSDT', 'LUNAUSDT', 'FTMUSDT', 'SUSHIUSDT',
 # Initialize an empty DataFrame
 df = pd.DataFrame()
 
+time_frame_options = {'1 min': Interval.in_1_minute, '5 min': Interval.in_5_minute,
+    '15 min': Interval.in_15_minute, '30 min': Interval.in_30_minute, '1 hour': Interval.in_1_hour, '4 hour': Interval.in_4_hour}
+selected_time_frame = st.selectbox('Select the time frame', list(time_frame_options.keys()))
+
+
+number_of_candles = st.slider('Select the number of candles', min_value=10, max_value=5000, value=1000, step=50)
+
+
 # Use a loop to retrieve the data for each symbol
 for symbol in symbols:
-    hist = tv.get_hist(symbol, 'KUCOIN', Interval.in_4_hour, n_bars=5000)
+    hist = tv.get_hist(symbol, 'KUCOIN', time_frame_options[selected_time_frame], n_bars=number_of_candles)
     df[symbol] = hist['close']
 
 # Rename the columns using the symbol names
